@@ -50,10 +50,14 @@ export async function createRedisClient(url: string, opts: ClientOpts = {}) {
     options.password = getEnv('redisPassword');
   }
 
-  return decorateRedisClient(
-    redis.createClient({
+  const client = redis
+    .createClient({
       ...options,
       ...opts,
     })
-  );
+    .on('error', (error) => {
+      // Log error
+    });
+
+  return decorateRedisClient(client);
 }
